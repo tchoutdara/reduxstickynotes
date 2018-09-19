@@ -1,20 +1,28 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import Note from './Note'
 
-const NoteList = ({ notes }) => (
+const filtered = (notes, activeFilter) => {
+    switch (activeFilter) {
+        case 'Active':
+        return notes.filter( n => !n.review )
+        case 'Reviewed':
+        return notes.filter( n => n.review )
+        default:
+        return notes
+    }
+}
+
+const NoteList = ({ notes, activeFilter }) => (
     <ul>
-        { notes.map( (n, i) => {
-            return (
-                <li key={i}>
-                 {n}
-                 </li>
-            )
-         })
+        { filtered(notes, activeFilter).map( (n) => 
+        <Note key={n.id} {...n} /> 
+        )
         }
     </ul>
     )
         const mapStateToProps = (state) => {
-            return { notes: state.notes }
+            return { notes: state.notes, activeFilter: state.filter }
         }
 
 

@@ -1,5 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { incId } from '../reducers/nextId'
+import { addNote } from '../reducers/notes'
+import { Button } from 'semantic-ui-react'
 
 
 class NoteForm extends React.Component {
@@ -7,11 +10,11 @@ class NoteForm extends React.Component {
 
     handleSubmit = (e) => {
         e.preventDefault()
-        const { dispatch } = this.props
+        const { dispatch, id } = this.props
         const { name } = this.state
-        const note = { name, id, done: false }
-        dispatch({ type: 'ADD_NOTE', note: name })
-        dispatch({ type: 'INC_ID' })
+        const note = { name, id, complete: false }
+        dispatch(addNote(note))
+        dispatch(incId())
         this.setState({ name: '' })
     }
 
@@ -25,9 +28,10 @@ class NoteForm extends React.Component {
         return(
             <div>
                 <h3>Make a Note</h3>
-                <form onSubmite={this.handleSubmit}>
-                <input value={name} onChange={this.handleChange} />
+                <form onSubmit={this.handleSubmit}>
+                <input value={name} onChange={this.handleChange} required />
                 </form>
+                <Button basic color='green' size='tiny' onClick={this.handleSubmit}>Create Note</Button>
             </div> 
         )
     }
@@ -38,4 +42,4 @@ const mapStateToProps = (state) => {
 }
 
 
-export default connect() (NoteForm)
+export default connect(mapStateToProps) (NoteForm)
